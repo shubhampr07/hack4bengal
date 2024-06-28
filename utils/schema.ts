@@ -19,15 +19,6 @@ export const MockInterview = pgTable("mockInterview", {
   createdBy: varchar("createdBy").notNull(),
   createdAt: varchar("createdAt").notNull(),
   mockId: varchar("mockId").notNull(),
-export const MockInterview = pgTable("mockInterview", {
-  id: serial("id").primaryKey(),
-  jsonMockResp: text("jsonMockResp").notNull(),
-  jobPosition: varchar("jobPosition").notNull(),
-  jobDesc: varchar("jobDesc").notNull(),
-  jobExperience: varchar("jobExperience").notNull(),
-  createdBy: varchar("createdBy").notNull(),
-  createdAt: varchar("createdAt").notNull(),
-  mockId: varchar("mockId").notNull(),
 });
 
 export const UserAnswer = pgTable("userAnswer", {
@@ -82,13 +73,4 @@ export interface UserAnswerType {
   rating: string;
   userEmail: string;
   createdAt: string;
-}
-
-export interface QuizType {
-  id?: number;
-  description: string;
-  question: string; // question Json stored in form of string
-  answers: string; // array stored in the form of string
-  difficulty: "easy" | "medium" | "hard";
-  totalQuestion: number;
 }
