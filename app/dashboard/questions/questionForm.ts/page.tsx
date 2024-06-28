@@ -22,9 +22,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
 export default function QuestionForm() {
+  const [loading, setLoading] = useState(false);
+
   const handleFormSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
@@ -45,7 +50,10 @@ export default function QuestionForm() {
     })
       .then((res) => res.json())
       .then((data) => console.log(data))
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => console.error("Error:", error))
+      .finally(() => {
+        setLoading(false);
+      });
   };
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -58,7 +66,7 @@ export default function QuestionForm() {
       <CardContent>
         <form className="grid gap-4" onSubmit={handleFormSubmit}>
           <div className="grid gap-2">
-            <Label htmlFor="question">Question</Label>
+            <Label htmlFor="question">Topic</Label>
             <Textarea
               id="question"
               name="question"
@@ -91,7 +99,13 @@ export default function QuestionForm() {
             </div>
           </div>
           <Button type="submit" className="w-full">
-            Submit Feedback
+            {loading ? (
+              <>
+                <LoaderCircle className="animate-spin" /> Generating from AI{" "}
+              </>
+            ) : (
+              "Generate"
+            )}
           </Button>
         </form>
       </CardContent>
