@@ -52,7 +52,7 @@ const AddNewInterview = () => {
       .text()
       .replace("```json", "")
       .replace("```", "");
-    console.log(JSON.parse(MockJsonResp));
+    // console.log(JSON.parse(MockJsonResp));
     setJsonResponse(MockJsonResp);
 
     const data: MockInterviewType = {
@@ -61,16 +61,16 @@ const AddNewInterview = () => {
       jobPosition: jobPosition!,
       jobDesc: jobDesc!,
       jobExperience: jobExperience!,
-      createdBy: user?.primaryEmailAddress?.emailAddress || '',
-      createdAt: moment().format('DD-MM-yyyy')
+      createdBy: user?.primaryEmailAddress?.emailAddress || "",
+      createdAt: moment().format("DD-MM-yyyy"),
     };
-    if(MockJsonResp) {
-    const {result} = await createInterview(JSON.stringify(data));
-    console.log("Inserted id", result);
-    if(result) {
-      setOpenDialog(false);
-      router.push('/dashboard/interview/'+result[0]?.mockId);
-    }
+    if (MockJsonResp) {
+      const { result } = await createInterview(JSON.stringify(data));
+      console.log("Inserted id", result);
+      if (result) {
+        setOpenDialog(false);
+        router.push("/dashboard/interview/" + result[0]?.mockId);
+      }
     } else {
       console.log("error");
     }
