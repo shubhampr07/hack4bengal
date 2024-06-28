@@ -1,5 +1,24 @@
-import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
+import { int, smallint } from "drizzle-orm/mysql-core";
+import {
+  bigint,
+  integer,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
+export const MockInterview = pgTable("mockInterview", {
+  id: serial("id").primaryKey(),
+  jsonMockResp: text("jsonMockResp").notNull(),
+  jobPosition: varchar("jobPosition").notNull(),
+  jobDesc: varchar("jobDesc").notNull(),
+  jobExperience: varchar("jobExperience").notNull(),
+  createdBy: varchar("createdBy").notNull(),
+  createdAt: varchar("createdAt").notNull(),
+  mockId: varchar("mockId").notNull(),
 export const MockInterview = pgTable("mockInterview", {
   id: serial("id").primaryKey(),
   jsonMockResp: text("jsonMockResp").notNull(),
@@ -23,6 +42,25 @@ export const UserAnswer = pgTable("userAnswer", {
   createdAt: varchar("createdAt"),
 });
 
+const difficulty = pgEnum("difficulty", ["easy", "medium", "hard"]);
+
+export const Quiz = pgTable("quiz", {
+  id: serial("id").primaryKey(),
+  description: varchar("description").notNull(),
+  question: varchar("question").notNull(),
+  answers: varchar("answers").notNull(),
+  difficulty: difficulty("difficulty"),
+  totalQuestion: integer("totalQuestion").default(10),
+});
+
+export const QuizAnswer = pgTable("quizAnswer", {
+  id: serial("id").primaryKey(),
+  userEmail: varchar("userEmail"),
+  userName: varchar("userName"),
+  correctAnswers: varchar("correctAnswer"),
+  quizId: integer("quiz_id").references(() => Quiz.id),
+});
+
 export interface MockInterviewType {
   id?: number;
   jsonMockResp: string;
@@ -44,4 +82,13 @@ export interface UserAnswerType {
   rating: string;
   userEmail: string;
   createdAt: string;
+}
+
+export interface QuizType {
+  id?: number;
+  description: string;
+  question: string; // question Json stored in form of string
+  answers: string; // array stored in the form of string
+  difficulty: "easy" | "medium" | "hard";
+  totalQuestion: number;
 }

@@ -21,13 +21,13 @@ export async function POST(req: NextRequest) {
 [
   {
     "question": "Detailed, clearly worded question text...",
-    "options": [
-      "Specific option 1",
-      "Specific option 2",
-      "Specific option 3",
-      "Specific option 4"
-    ],
-    "answer": "Exact text of the correct option",
+    "options": {
+      "A": "Specific option 1",
+      "B": "Specific option 2",
+      "C": "Specific option 3",
+      "D": "Specific option 4"
+    },
+    "answer": "A" // or "B" or "C" or "D"
   }
 ]
 Guidelines:
@@ -39,6 +39,8 @@ Guidelines:
 6. Ensure all options are plausible, with only one correct answer.
 7. Use clear, concise language in both questions and options.
 8. If applicable, include code snippets or technical terms relevant to the topic.
+9. Always provide exactly four options labeled A, B, C, and D.
+10. The answer should be given as a single letter: A, B, C, or D, corresponding to the correct option.
 Generate ${questionCount} questions following this format and guidelines.`;
 
     const result = await chatSession.sendMessage(InputPrompt);
