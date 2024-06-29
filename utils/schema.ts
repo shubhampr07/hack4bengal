@@ -33,14 +33,12 @@ export const UserAnswer = pgTable("userAnswer", {
   createdAt: varchar("createdAt"),
 });
 
-const difficulty = pgEnum("difficulty", ["easy", "medium", "hard"]);
-
 export const Quiz = pgTable("quiz", {
   id: serial("id").primaryKey(),
-  description: varchar("description").notNull(),
+  topic: varchar("topic").notNull(),
   question: varchar("question").notNull(),
   answers: varchar("answers").notNull(),
-  difficulty: difficulty("difficulty"),
+  difficulty: varchar("difficulty").notNull(),
   totalQuestion: integer("totalQuestion").default(10),
 });
 
@@ -49,6 +47,8 @@ export const QuizAnswer = pgTable("quizAnswer", {
   userEmail: varchar("userEmail"),
   userName: varchar("userName"),
   correctAnswers: varchar("correctAnswer"),
+  points: varchar("points"),
+  time: integer("time"),
   quizId: integer("quiz_id").references(() => Quiz.id),
 });
 
