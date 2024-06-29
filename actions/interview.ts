@@ -5,10 +5,7 @@ import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
 import { v4 as uuidv4 } from "uuid";
 
-
-export const createInterview = async (
-  rawdata: any
-) => {
+export const createInterview = async (rawdata: any) => {
   try {
     const data = JSON.parse(rawdata);
     const InputPrompt =
@@ -27,15 +24,13 @@ export const createInterview = async (
       .text()
       .replace("```json", "")
       .replace("```", "");
-    
-      
-      if (MockJsonResp) {
-          const datawithGemini = {
-              ...data,
-              jsonMockResp: MockJsonResp,
-              mockId: uuidv4()
-              
-          }
+
+    if (MockJsonResp) {
+      const datawithGemini = {
+        ...data,
+        jsonMockResp: MockJsonResp,
+        mockId: uuidv4(),
+      };
       const result = await db
         .insert(MockInterview)
         .values(datawithGemini)
@@ -44,6 +39,6 @@ export const createInterview = async (
     }
   } catch (error) {
     // throw new Error();
-    console.log(error)
+    console.log(error);
   }
 };

@@ -1,5 +1,6 @@
 // app/api/gemini/route.ts
 
+import { createQuiz } from "@/actions/quiz";
 import { chatSession } from "@/utils/GeminiAi";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,7 +9,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const { question, difficultyLevel, questionCount } = body;
-    console.log(body);
 
     if (!question || !difficultyLevel || !questionCount) {
       return NextResponse.json(
@@ -45,9 +45,27 @@ Generate ${questionCount} questions following this format and guidelines.`;
 
     const result = await chatSession.sendMessage(InputPrompt);
 
-    return NextResponse.json(
+    const jsonResult = JSON.parse(
       result.response.text().replace("```json", "").replace("```", "")
     );
+
+    const quizAnswers = jsonResult.map((question) => question.answer);
+    const quizQuestionWithOptions = jsonResult.map((question) => ({
+      question: question.question,
+      options: question.options,
+    }));
+
+    const data = {
+      topic: question,
+      question: JSON.stringify(quizQuestionWithOptions),
+      answers: JSON.stringify(quizAnswers),
+      difficulty: difficultyLevel,
+      totalQuestion: jsonResult.length,
+    };
+
+    const { quizId } = await createQuiz(data);
+
+    return NextResponse.json(quizId);
   } catch (error) {
     console.error("API request failed:", error);
     return NextResponse.json(

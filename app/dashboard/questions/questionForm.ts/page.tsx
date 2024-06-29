@@ -1,8 +1,3 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/Y35ks5EGAb5
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import {
   Card,
   CardHeader,
@@ -22,11 +17,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { LoaderCircle } from "lucide-react";
+import {
+  Check,
+  CopyCheck,
+  CopyIcon,
+  LoaderCircle,
+  ShareIcon,
+} from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function QuestionForm() {
   const [loading, setLoading] = useState(false);
+  const [quizLink, setQuizLink] = useState(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const router = useRouter();
 
   const handleFormSubmit = (e) => {
     setLoading(true);
@@ -49,12 +54,27 @@ export default function QuestionForm() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => {
+        setQuizLink(data);
+        if (data.error) {
+          console.error(data.error);
+          form.reset();
+        }
+      })
       .catch((error) => console.error("Error:", error))
       .finally(() => {
         setLoading(false);
       });
   };
+
+  const copyTextToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
@@ -72,12 +92,13 @@ export default function QuestionForm() {
               name="question"
               placeholder="Enter the Topic of the question you want to generate"
               className="min-h-[100px]"
+              disabled={loading || quizLink}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="difficulty">Difficulty</Label>
-              <Select name="difficulty">
+              <Select name="difficulty" disabled={loading || quizLink}>
                 <SelectTrigger id="difficulty">
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
@@ -95,19 +116,58 @@ export default function QuestionForm() {
                 name="total"
                 type="number"
                 placeholder="Enter total questions"
+                disabled={loading || quizLink}
               />
             </div>
           </div>
-          <Button type="submit" className="w-full">
+          <Button
+            type={quizLink ? "button" : "submit"}
+            className="w-full"
+            onClick={() => {
+              if (quizLink) {
+                router.push("/quiz/" + quizLink);
+              }
+            }}
+          >
             {loading ? (
               <>
                 <LoaderCircle className="animate-spin" /> Generating from AI{" "}
               </>
+            ) : quizLink ? (
+              "Start"
             ) : (
               "Generate"
             )}
           </Button>
         </form>
+        {quizLink && (
+          <div className=" mt-4 flex gap-4 justify-center">
+            <Button variant="secondary">
+              <ShareIcon className="mr-2 h-4 w-4" />
+              Share
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                copyTextToClipboard(
+                  process.env.NEXT_PUBLIC_SITE_URL + "/quiz/" + quizLink
+                ).then(() => {
+                  setLinkCopied(true);
+                  setTimeout(() => {
+                    setLinkCopied(false);
+                  }, 5000);
+                });
+              }}
+            >
+              {linkCopied ? (
+                <Check className="mr-2 h-4 w-4" />
+              ) : (
+                <CopyIcon className="mr-2 h-4 w-4" />
+              )}
+              Copy Link
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
