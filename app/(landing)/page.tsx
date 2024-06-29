@@ -14,7 +14,7 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 export default function Home() {
   return (
     <div>
-    <NavbarDemo />
+    {/* <NavbarDemo /> */}
     <LandingHero />
     <AboutUs />
     <HeroScrollDemo />
