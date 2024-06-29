@@ -93,6 +93,7 @@ const AddNewInterview = () => {
                     <label>Job Role/Job Position</label>
                     <Input
                       placeholder="Ex. Full Stack Developer"
+                      className="mt-2"
                       required
                       onChange={(e) => setJobPosition(e.target.value)}
                     />
@@ -101,6 +102,7 @@ const AddNewInterview = () => {
                     <label>Job Description/ Tech Stack</label>
                     <Input
                       placeholder="Ex. React, Angular, NodeJs, SQL, etc."
+                      className="mt-2"
                       required
                       onChange={(e) => setJobDesc(e.target.value)}
                     />
@@ -109,6 +111,7 @@ const AddNewInterview = () => {
                     <label>Years of Experience</label>
                     <Input
                       placeholder="Ex. 5"
+                      className="mt-2"
                       type="number"
                       max={50}
                       required
