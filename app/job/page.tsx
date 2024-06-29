@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import useFetch from "@/utils/useFetch";
 import JobList from "../dashboard/_components/JobList";
+import Image from "next/image";
 
 interface Job {
     job_id: string;
@@ -31,32 +32,40 @@ const JobSearch = () => {
     };
 
     const loadMore = () => {
-        setVisibleJobs((prev)=>prev+10);
+        setVisibleJobs((prev) => prev + 10);
     };
 
     return (
-        <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
-            <h1 style={{ textAlign: "center" }}>Job Search</h1>
-            <form onSubmit={handleSubmit} style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-                <input 
-                    type="text" 
-                    value={role} 
-                    onChange={(e) => setRole(e.target.value)} 
-                    placeholder="Enter job role (e.g., React)" 
-                    style={{ padding: "10px", width: "70%", marginRight: "10px" }}
+        <div className="p-8 max-w-4xl mx-auto">
+            <h1 className="text-2xl font-bold text-center mb-6">Job Search</h1>
+            <form onSubmit={handleSubmit} className="flex justify-center mb-6">
+                <input
+                    type="text"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    placeholder="Enter job role (e.g., React)"
+                    className="p-2 border border-gray-300 rounded-l-md w-2/3"
                 />
-                <button type="submit" style={{ padding: "10px 20px" }}>Search</button>
+                <button type="submit" className="p-2 bg-blue-500 text-white rounded-r-md">Search</button>
             </form>
 
-            {isLoading && <p style={{ textAlign: "center" }}>Loading...</p>}
-            {error && <p style={{ textAlign: "center", color: "red" }}>Error fetching jobs.</p>}
-            <ul style={{ listStyle: "none", padding: 0 }}>
+            {isLoading && <img src="./Fullsnake.gif" className="flex justify-center" /> }
+            {error && <p className="text-center text-red-500">Error fetching jobs.</p>}
+
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {data.slice(0, visibleJobs).map((job: Job) => (
-                    <JobList job={job} role={role}/>
+                    <JobList job={job} role={role} key={job.job_id}/>
+
                 ))}
             </ul>
+
             {visibleJobs < data.length && (
-                <button onClick={loadMore} style={{ display: "block", margin: "20px auto", padding: "10px 20px" }}>Read More</button>
+                <button
+                    onClick={loadMore}
+                    className="block mt-8 mx-auto bg-blue-500 text-white rounded-md py-2 px-4 hover:bg-blue-600 transition"
+                >
+                    Read More
+                </button>
             )}
         </div>
     );
