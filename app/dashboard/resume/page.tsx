@@ -11,6 +11,8 @@ import {
 import { Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import { resumeAnalyse } from "@/actions/resume";
+import Markdown from 'react-markdown';
 
 
 const FileSvgDraw = () => {
@@ -77,27 +79,56 @@ const FileUploaderComponent = ({files, setFiles}: {files: File[] | null, setFile
 };
 
 const Resume = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [jobDesc, setJobDesc] = useState<string>('');
     const [files, setFiles] = useState<File[] | null>(null);
+    const [score, setScore] = useState<string>('');
+    const [comment, setComment] = useState<string>('');
 
     async function handleAnalyse(){
-      if(files == null) return;
+      setIsLoading(true);
+
+      if(files == null){ 
+        setIsLoading(false);
+        return;
+      }
+
+      setScore('');
+      setComment('');
 
       const formData = new FormData();
       formData.append('file', files[0]);
 
-      await axios.post("http://localhost:3002/analyse", formData, {
+      const {data} = await axios.post("http://localhost:3002/analyse", formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+
+      if(data && data.msg && data.msg === "success"){
+        const resp = await resumeAnalyse(data.data?.text, jobDesc);
+        setScore(resp.score);
+        setComment(resp.comment);
+      }
+
+      setIsLoading(false);
     }
+
+  
+    const handleJobDescriptionChange = (event: any) => {
+      setJobDesc(event.target.value);
+    };
 
     return (
       <div className="flex flex-col gap-5 my-5">
           <h2 className="font-bold text-2xl">Resume Review</h2>
-          <Textarea placeholder="Put job description here ..." rows={10} />
+          <Textarea placeholder="Put job description here ..." rows={10} onChange={handleJobDescriptionChange} />
           <FileUploaderComponent files={files} setFiles={setFiles} />
-          <Button onClick={handleAnalyse}>Analyse</Button>
+          <Button onClick={handleAnalyse} disabled={isLoading}>Analyse</Button>
+
+          {score && <h1>Your Resume score: {score} / 10</h1>}
+          {comment && <h3>Comments: <br /><Markdown>{comment}</Markdown></h3>}
+
       </div>
     )
   }
