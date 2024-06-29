@@ -1,5 +1,6 @@
 
 import { AboutUs } from "@/components/About";
+
 import Footer from "@/components/Footer";
 import { LandingHero } from "@/components/Hero";
 import IconScroll from "@/components/IconScroll";

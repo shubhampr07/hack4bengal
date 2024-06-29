@@ -3,6 +3,7 @@ import React from 'react'
 const Subscribe = () => {
   return (
     <section className="relative z-10 overflow-hidden py-16 px-8 mb-[60px] mt-[80px]">
+
     <div className="container">
         <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 lg:w-1/2">
@@ -21,6 +22,7 @@ const Subscribe = () => {
                 <div className="text-center lg:text-right"><a
                         className="font-semibold rounded-lg mx-auto inline-flex items-center justify-center bg-gray-300 py-4 px-9 hover:bg-opacity-90"
                         href="/dashboard">Create Your First Mock Interview</a>
+
                 </div>
             </div>
         </div>
